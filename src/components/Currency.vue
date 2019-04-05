@@ -1,8 +1,12 @@
 <template>
-  <md-field>
-    <label>{{label}}</label>
-    <md-input type="text" v-model="value" @keydown.stop.prevent="valueChange($event)" ></md-input>
-  </md-field>
+  <section data-component="currency-input">
+    <md-field>
+      <label>{{label}}</label>
+      <md-input type="text" v-model="value" @keydown="valueChange($event)" ></md-input>
+    </md-field>
+
+  </section>
+
 
 </template>
 
@@ -15,7 +19,7 @@
   Vue.use(MdField);
   export default {
     name: 'currencyinput',
-    props: ['currencyprops', 'testprops'],
+    props: ['currencyprops', 'events'],
     components: {
 
     },
@@ -23,19 +27,36 @@
       return{
         label: this.currencyprops.label || '',
         value: this.currencyprops.value || '',
-        testprops: this.testprops.events
+        masterEvents: this.events
       }
     },
     watch: {
     },
     mounted: function() {
-      this.testprops.events[0]['blur']();
+      const eventsWL = ['blur','change','click','input','keyup','keydown','keypress','hover'];
+      const self = this;
+      if(this.masterEvents ){
+        const keys = Object.keys(this.masterEvents);
+        keys.map((e) => {
+
+          if(eventsWL.includes(e)){
+            const elem = self.$el.querySelector("[data-component='currency-input'] [type=text]");
+
+            if(elem){
+              console.log(self.masterEvents[e]);
+              elem.addEventListener(e, self.masterEvents[e]);
+            }
+          }
+        })
+
+      }
     },
 
 
     methods: {
       valueChange(value){
-        console.log(this.testprops);
+        const wl = ['Tab'];
+        if(wl.includes(value.code)) return true;
         this.value = this.sanitizeInput(value);
         this.$emit('valueMap', this.value);
 
@@ -44,7 +65,7 @@
       sanitizeInput(value){
 
         //get only digits
-        const element = (value.key === 'Backspace' ? this.value.replace('$','').substr(1) : this.value + value.key)
+        const element = (value.key === 'Backspace' ? this.value.replace('$','').slice(0,-1) : this.value + value.key)
           .replace(/[^0-9]+/g,'');
         let newElem = element.split('').reverse().map((e,i) => {
           if(i >0 && i %3 === 0){
@@ -68,5 +89,7 @@
 
 
 <style scoped="true">
-
+  .md-field{
+    margin-bottom: 0;
+  }
 </style>

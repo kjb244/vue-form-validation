@@ -29,10 +29,13 @@
 
 
     <div class="form-group">
-      <md-field>
-        <label>Purchase Price</label>
-        <md-input  v-model="$v.purchasePrice.$model" type="number" @blur="purchasePriceBlur()" ></md-input>
-      </md-field>
+      <currencyinput
+        v-model="$v.purchasePrice.$model"
+        :currencyprops="{label: 'Purchase Price', value: $v.purchasePrice.$model}"
+        :events="{blur: purchasePriceBlur}"
+        v-on:valueMap="$v.purchasePrice.$model = $event">
+      </currencyinput>
+
 
       <div class="error" v-if="purchasePriceBlurred && !$v.purchasePrice.required">Field is required</div>
 
@@ -43,20 +46,16 @@
     <div class="form-group">
       <currencyinput
         v-model="$v.downPayment.$model"
-        :currencyprops="{label: 'Down Payment', value: test}"
-        :testprops="{events: [{blur: downPaymentBlur}]}"
-        @blur="downPaymentBlur"
+        :currencyprops="{label: 'Down Payment', value: $v.downPayment.$model}"
+        :events="{blur: downPaymentBlur}"
         v-on:valueMap="$v.downPayment.$model = $event">
       </currencyinput>
-
 
       <div class="error" v-if="downPaymentBlurred && !$v.downPayment.required">Field is required</div>
       <div class="error" v-if="downPaymentBlurred && !$v.downPayment.downPaymentValidation">Loan amount must be between $60,000 and $2,000,000</div>
     </div>
 
-
-{{downPaymentBlurred}}
-    <md-button :disabled="$v.$invalid" class="md-raised md-primary">Primary</md-button>
+    <md-button :disabled="$v.$invalid" class="md-raised md-primary">Submit</md-button>
 
   </section>
 </template>
@@ -80,6 +79,7 @@
   const { lettersOnly } = utils;
 
   const downPaymentValidation =(value, vm) => {
+    if (value === '') return true;
     const pp = vm.purchasePrice.replace(/[^0-9]+/g,'') || '0';
     const dp = vm.downPayment.replace(/[^0-9]+/g,'') || '0';
     if (pp - dp < 60000 || pp - dp > 2000000){
@@ -105,7 +105,6 @@
         purchasePriceBlurred: false,
         downPayment: '',
         downPaymentBlurred: false,
-        test: '123'
       }
     },
     validations: {
@@ -155,9 +154,13 @@
 </script>
 
 <style scoped>
-  .md-field{
+  .form-group{
     margin-bottom: 6px;
-    margin-top: 10px;
+    margin-top: 16px;
+  }
+
+  .md-field, [data-component="currency-input"]{
+    margin-bottom: 4px;
   }
 
   .md-button{
