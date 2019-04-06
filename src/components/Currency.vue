@@ -57,6 +57,7 @@
       valueChange(value){
         const wl = ['Tab'];
         if(wl.includes(value.code)) return true;
+        value.preventDefault();
         this.value = this.sanitizeInput(value);
         this.$emit('valueMap', this.value);
 
