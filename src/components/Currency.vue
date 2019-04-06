@@ -75,7 +75,8 @@
           return e;
         }).reverse().join('');
 
-
+        //if no digits then don't put dollar sign
+        if (!newElem.length) return newElem;
         return '$' + newElem;
 
       }
