@@ -10,24 +10,24 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
       routeData: {
-          forwardBack: 'forward',
-          routes: ['splash', 'info', 'income'],
-          formData: ['splash', 'info', 'income'].reduce((accum, e) => {
-              accum[e] = {};
-              return accum;
+          routes: ['route1', 'route2', 'route3'],
+          fakeData: 'abc',
+          formData: ['route1', 'route2', 'route3'].reduce((accum,e) => {
+            accum[e] = {};
+            return accum;
           },{}),
           routeMapping: {
-              splash: {
-                  next: 'info',
+              route1: {
+                  next: 'route2',
                   prev: null
               },
-              info: {
-                  next: 'income',
-                  prev: 'splash'
+              route2: {
+                  next: 'route3',
+                  prev: 'route1'
               },
-              income: {
+              route3: {
                   next: null,
-                  prev: 'info'
+                  prev: 'route2'
               }
           },
           visitedRoutes: []
@@ -44,91 +44,62 @@ export default new Vuex.Store({
 
   },
   mutations: {
-    SUBMIT_CLICK: function(state, data){
-        const {currRoute, nextRoute, form}  = data;
-        state.routeData.forwardBack = 'forward';
-        state.routeData.formData[currRoute] = form;
-        const visitedRoutes = state.routeData.visitedRoutes;
-        if(!visitedRoutes.length){
-            visitedRoutes.push(currRoute);
-        }
-        visitedRoutes.push(nextRoute);
-        //since adding the forward/backward class takes a little time, pause for a bit
-        setTimeout(()=> {
-            router.push(nextRoute);
-        },100);
+    MENU_CLICK: function(state, value){
+      router.push(value);
+      state.routeData.visitedRoutes.push(value);
 
 
     },
-    SUBMIT_BACK: function(state, data){
-      const {currRoute, nextRoute, form}  = data;
-      state.routeData.forwardBack = 'back';
-      state.routeData.formData[currRoute] = form;
-      const visitedRoutes = state.routeData.visitedRoutes;
-      if(!visitedRoutes.length){
-        visitedRoutes.push(currRoute);
-      }
-      visitedRoutes.push(nextRoute);
-      //since adding the forward/backward class takes a little time, pause for a bit
-      setTimeout(()=> {
-          router.push(nextRoute);
-      },100);
-
-
-
+    SUBMIT_FORM: function(state, data){
+      const {formData, currRoute, nextRoute} = data;
+      //store data
+      state.routeData.formData[currRoute] = formData;
+      //move to next route
+      router.push(nextRoute);
     },
-
-    ADD_ROUTE_DATA: function(state, data){
-        console.log('adding route data mutation');
-        state.routeData = data;
+    TESTING_DELAY: function(state, value){
+      const alpha = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(',');
+      const alphaStr = [1,2,3].reduce((accum)=>{
+        accum += alpha[Math.floor(Math.random()*26)];
+        return accum;
+      },'');
+      setTimeout(() => {
+        state.routeData.fakeData = alphaStr;
+      },1000);
     }
   },
   actions: {
-    submitClick: function(context, form){
-        console.log('submitClick action');
-        const currRoute = router.currentRoute.name.toLowerCase();
-        const routeMapping = this.state.routeData.routeMapping[currRoute];
+    menuClick: function(context, value){
+        value = value.replace(/\s+/g,'').toLowerCase();
+        context.commit('MENU_CLICK',value);
 
-        if(routeMapping){
-            const nextRoute = routeMapping.next;
-            if(nextRoute){
-
-                context.commit('SUBMIT_CLICK',{currRoute, nextRoute, form});
-            }
-        }
     },
-    submitBack: function(context, form){
-      console.log('submitBack action');
+    testingDelay: function(context){
+      context.commit('TESTING_DELAY');
+    },
+    submitForm: function(context, data){
+      const {formData, forward} = data;
+      console.log('here');
+      const rd = this.state.routeData;
+      console.log(router.currentRoute);
       const currRoute = router.currentRoute.name.toLowerCase();
-      const routeMapping = this.state.routeData.routeMapping[currRoute];
-
-      if(routeMapping){
-          const nextRoute = routeMapping.prev;
-          if(nextRoute){
-              context.commit('SUBMIT_BACK',{currRoute, nextRoute, form});
-          }
+      let nextRoute;
+      if(forward.forward){
+        nextRoute = rd.routeMapping[currRoute].next;
       }
+      else{
+        nextRoute = rd.routeMapping[currRoute].prev;
+      }
+
+      context.commit('SUBMIT_FORM', {formData, currRoute, nextRoute});
+
+
     },
-    removeLinks: function(context, link){
-      context.commit('REMOVE_LINK', link);
-    },
-    removeAll (context) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                context.commit('REMOVE_ALL');
-                resolve();
-            }, 1500)
-        })
-    },
+
+
+
     testAjaxGet: function(){
         return axios.get('http://jsonplaceholder.typicode.com/posts');
-
-    },
-    addRouteData (context){
-        setTimeout(() => {
-            console.log('add route data action');
-            context.commit('ADD_ROUTE_DATA', [1,2,3]);
-        },500);
 
     }
   }

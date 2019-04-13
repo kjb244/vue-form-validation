@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h3 class="md-display-1">Splash</h3>
+    <h3 class="md-display-1">Route 1 (Validations)</h3>
 
     <div class="form-group">
       <md-field>
@@ -55,7 +55,8 @@
       <div class="error" v-if="downPaymentBlurred && !$v.downPayment.downPaymentValidation">Loan amount must be between $60,000 and $2,000,000</div>
     </div>
 
-    <md-button :disabled="$v.$invalid" class="md-raised md-primary">Submit</md-button>
+    <md-button :disabled="$v.$invalid" class="md-raised md-primary" @click="clickSubmit(!$v.$invalid)">Next</md-button>
+
 
   </section>
 </template>
@@ -91,7 +92,7 @@
 
 
   export default {
-    name: 'splash',
+    name: 'route1',
     components: {
       currencyinput
     },
@@ -128,7 +129,27 @@
       }
 
     },
+    created: function(){
+      utils.fillInputs(this,'route1');
+    },
     methods: {
+      ...mapActions([
+        'submitForm'
+      ]),
+      clickSubmit(valid) {
+
+        if(valid){
+
+          const formData = {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            purchasePrice: this.purchasePrice,
+            downPayment: this.downPayment
+          };
+          const forward= { forward: true};
+          this.submitForm({formData, forward});
+        }
+      },
 
       firstNameBlur() {
         this.firstNameBlurred = true;
@@ -147,9 +168,11 @@
         this.$v.downPayment.$touch();
       }
     },
-    computed:{
-
-    }
+    computed: {
+      ...mapState([
+        'routeData'
+      ]),
+    },
   }
 </script>
 
