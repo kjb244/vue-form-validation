@@ -79,7 +79,6 @@ export default new Vuex.Store({
     },
     submitForm: function(context, data){
       const {formData, forward} = data;
-      console.log('here');
       const rd = this.state.routeData;
       console.log(router.currentRoute);
       const currRoute = router.currentRoute.name.toLowerCase();

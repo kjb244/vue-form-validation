@@ -23,7 +23,9 @@
       </md-field>
     </div>
 
-    <md-button :disabled="!(formData.website.length > 0 && formData.email.length > 0 && formData.description.length > 0)" class="md-raised md-primary">Submit</md-button>
+    <buttons :buttonProps="{route: 'route3', formValid: formData.website.length && formData.email.length, formData: formData}"></buttons>
+
+
 
 
 
@@ -33,6 +35,7 @@
 <script>
   // @ is an alias to /src
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+  import buttons from '../components/Buttons.vue';
   import Vue from 'vue';
   import { MdField, MdButton } from 'vue-material/dist/components';
   import 'vue-material/dist/vue-material.min.css';
@@ -49,6 +52,7 @@
   export default {
     name: 'route3',
     components: {
+      buttons
 
     },
     data(){

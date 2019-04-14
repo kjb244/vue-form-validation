@@ -23,9 +23,8 @@
       </md-field>
     </div>
 
-    <md-button :disabled="!(formData.favSport.length > 0 && formData.favBand.length > 0 && formData.description.length > 0)" class="md-raised md-primary" @click = clickSubmit()>Prev</md-button>
+    <buttons :buttonProps="{route: 'route2', formValid: formData.favSport.length && formData.favBand.length, formData: formData}"></buttons>
 
-    <md-button :disabled="!(formData.favSport.length > 0 && formData.favBand.length > 0 && formData.description.length > 0)" class="md-raised md-primary">Next</md-button>
 
 
   </section>
@@ -34,6 +33,7 @@
 <script>
   // @ is an alias to /src
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+  import buttons from '../components/Buttons.vue';
   import Vue from 'vue';
   import { MdField, MdButton } from 'vue-material/dist/components';
   import 'vue-material/dist/vue-material.min.css';
@@ -52,6 +52,7 @@
   export default {
     name: 'route2',
     components: {
+      buttons
 
     },
     data(){

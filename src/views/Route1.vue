@@ -55,7 +55,7 @@
       <div class="error" v-if="downPaymentBlurred && !$v.downPayment.downPaymentValidation">Loan amount must be between $60,000 and $2,000,000</div>
     </div>
 
-    <md-button :disabled="$v.$invalid" class="md-raised md-primary" @click="clickSubmit(!$v.$invalid)">Next</md-button>
+    <buttons :buttonProps="{route: 'route1', formValid: !$v.$invalid, formData: {firstName: firstName, lastName: lastName, purchasePrice: purchasePrice, downPayment: downPayment }}"></buttons>
 
 
   </section>
@@ -65,6 +65,7 @@
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   import Vue from 'vue';
   import currencyinput from '../components/Currency.vue';
+  import buttons from '../components/Buttons.vue';
   import { MdField, MdButton } from 'vue-material/dist/components';
   import 'vue-material/dist/vue-material.min.css';
   import 'vue-material/dist/theme/default.css';
@@ -94,7 +95,7 @@
   export default {
     name: 'route1',
     components: {
-      currencyinput
+      currencyinput, buttons
     },
     data(){
       return{
@@ -133,23 +134,8 @@
       utils.fillInputs(this,'route1');
     },
     methods: {
-      ...mapActions([
-        'submitForm'
-      ]),
-      clickSubmit(valid) {
 
-        if(valid){
 
-          const formData = {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            purchasePrice: this.purchasePrice,
-            downPayment: this.downPayment
-          };
-          const forward= { forward: true};
-          this.submitForm({formData, forward});
-        }
-      },
 
       firstNameBlur() {
         this.firstNameBlurred = true;
