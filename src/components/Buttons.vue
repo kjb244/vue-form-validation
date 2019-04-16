@@ -8,6 +8,7 @@
       <md-button :disabled="!buttonProps.formValid"  class="md-raised md-primary" @click="clickSubmit(true,true)">Next</md-button>
 
     </div>
+    <spinner-overlay :spinnerOverlayProps="{showDialog: showSpinner}"></spinner-overlay>
 
   </section>
 
@@ -19,6 +20,8 @@
   import Vue from 'vue';
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   import { MdField } from 'vue-material/dist/components';
+  import spinnerOverlay from './SpinnerOverlay.vue';
+
   import 'vue-material/dist/vue-material.min.css';
   import 'vue-material/dist/theme/default.css';
   Vue.use(MdField);
@@ -26,13 +29,14 @@
     name: 'buttons',
     props: ['buttonProps'],
     components: {
-
+      spinnerOverlay
     },
     data(){
       return{
         buttonsProps: this.buttonProps,
         showPrev: false,
-        showNext: false
+        showNext: false,
+        showSpinner:false
       }
     },
 
@@ -47,7 +51,7 @@
       clickSubmit(valid, type) {
 
         if(valid){
-
+          this.showSpinner = true;
           const formData = this.buttonProps.formData;
           const forward= { forward: type};
           this.submitForm({formData, forward});
@@ -83,4 +87,6 @@
   [data-component="buttons"]{
     display: flex;
   }
+
+
 </style>

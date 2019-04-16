@@ -4,6 +4,7 @@ import axios from 'axios';
 import router from './router.js';
 
 
+
 Vue.use(Vuex);
 
 
@@ -51,11 +52,15 @@ export default new Vuex.Store({
 
     },
     SUBMIT_FORM: function(state, data){
-      const {formData, currRoute, nextRoute} = data;
-      //store data
-      state.routeData.formData[currRoute] = formData;
-      //move to next route
-      router.push(nextRoute);
+      //simulate ajax
+      setTimeout(()=> {
+        const {formData, currRoute, nextRoute} = data;
+        //store data
+        state.routeData.formData[currRoute] = formData;
+        //move to next route
+        router.push(nextRoute);
+      },1200);
+
     },
     TESTING_DELAY: function(state, value){
       const alpha = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(',');

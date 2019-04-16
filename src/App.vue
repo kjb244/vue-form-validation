@@ -32,7 +32,12 @@
       </md-app-drawer>
 
       <md-app-content>
-        <router-view/>
+        <div class="router-transition-wrapper">
+          <transition name="router-transition" mode="out-in">
+            <router-view/>
+          </transition>
+        </div>
+
       </md-app-content>
     </md-app>
   </div>
@@ -97,6 +102,17 @@
 
   a{
     cursor: pointer;
+  }
+
+  .router-transition-enter-active, .router-transition-leave-active {
+    transition: opacity .5s;
+  }
+  .router-transition-enter, .router-transition-leave-to  {
+    opacity: 0;
+  }
+
+  .router-transition-enter-to, .router-transition-leave{
+    opacity: 1;
   }
 
 
