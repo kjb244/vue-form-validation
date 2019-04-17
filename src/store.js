@@ -31,7 +31,8 @@ export default new Vuex.Store({
                   prev: 'route2'
               }
           },
-          visitedRoutes: []
+          visitedRoutes: [],
+          showSpinner: false
       }
   },
   getters: {
@@ -53,12 +54,14 @@ export default new Vuex.Store({
     },
     SUBMIT_FORM: function(state, data){
       //simulate ajax
+      state.routeData.showSpinner = true;
       setTimeout(()=> {
         const {formData, currRoute, nextRoute} = data;
         //store data
         state.routeData.formData[currRoute] = formData;
         //move to next route
         router.push(nextRoute);
+        state.routeData.showSpinner = false;
       },1200);
 
     },
@@ -85,7 +88,6 @@ export default new Vuex.Store({
     submitForm: function(context, data){
       const {formData, forward} = data;
       const rd = this.state.routeData;
-      console.log(router.currentRoute);
       const currRoute = router.currentRoute.name.toLowerCase();
       let nextRoute;
       if(forward.forward){

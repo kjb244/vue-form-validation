@@ -27,7 +27,7 @@
       }
     },
     watch: {
-      'spinnerOverlayProps.showDialog': function(newVal, oldVal){
+      'routeData.showSpinner': function(newVal, oldVal){
         this.showDialog = newVal;
 
 

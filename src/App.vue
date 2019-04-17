@@ -37,6 +37,7 @@
             <router-view/>
           </transition>
         </div>
+        <spinner-overlay></spinner-overlay>
 
       </md-app-content>
     </md-app>
@@ -48,6 +49,7 @@
 
 <script>
   import Vue from 'vue';
+  import spinnerOverlay from './components/SpinnerOverlay.vue';
   import VueMaterial from 'vue-material'
   import 'vue-material/dist/vue-material.min.css';
   import 'vue-material/dist/theme/default.css';
@@ -58,6 +60,9 @@
 
   export default {
   name: 'App',
+  components: {
+    spinnerOverlay
+  },
   data(){
     return{
       menuVisible: false,
